@@ -1,3 +1,1 @@
-# glocal_gnn
-
-May the k-dimensional force be with you.
+# Source code for AAAI submission 3463
