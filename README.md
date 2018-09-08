@@ -1,2 +1,3 @@
-# k-gnn
-Source code for AAAI subimssion #3463.
+# glocal_gnn
+
+May the k-dimensional force be with you.
