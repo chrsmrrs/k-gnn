@@ -9,9 +9,9 @@ from torch_geometric.datasets import QM9
 import torch_geometric.transforms as T
 from torch_geometric.nn import NNConv
 from torch_geometric.utils import one_hot
-from glocal_gnn import GraphConv, DataLoader, avg_pool
-from glocal_gnn import TwoMalkin, ConnectedThreeMalkin
-from glocal_gnn import Complete
+from k_gnn import GraphConv, DataLoader, avg_pool
+from k_gnn import TwoMalkin, ConnectedThreeMalkin
+from k_gnn import Complete
 
 
 class MyFilter(object):
@@ -62,9 +62,7 @@ dataset = dataset.shuffle()
 # Normalize targets to mean = 0 and std = 1.
 tenpercent = int(len(dataset) * 0.1)
 mean = dataset.data.y[tenpercent:].mean(dim=0)
-print('---- Mean: {:7f} ----'.format(mean[target].item()))
 std = dataset.data.y[tenpercent:].std(dim=0)
-print('---- Std: {:7f} ----'.format(std[target].item()))
 dataset.data.y = (dataset.data.y - mean) / std
 
 test_dataset = dataset[:tenpercent]

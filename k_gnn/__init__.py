@@ -2,12 +2,12 @@ from graph_cpu import two_local, connected_two_local
 from graph_cpu import two_malkin, connected_two_malkin
 from graph_cpu import three_local, connected_three_local
 from graph_cpu import three_malkin, connected_three_malkin
-# from graph_cpu import assignment_2to3
+from graph_cpu import assignment_2to3
 from .transform import TwoLocal, ConnectedTwoLocal
 from .transform import TwoMalkin, ConnectedTwoMalkin
 from .transform import ThreeLocal, ConnectedThreeLocal
 from .transform import ThreeMalkin, ConnectedThreeMalkin
-# from .transform import Assignment2To3
+from .transform import Assignment2To3
 from .dataloader import DataLoader
 from .graph_conv import GraphConv
 from .pool import add_pool, max_pool, avg_pool
@@ -22,7 +22,7 @@ __all__ = [
     'connected_three_local',
     'three_malkin',
     'connected_three_malkin',
-    # 'assignment_2to3',
+    'assignment_2to3',
     'TwoLocal',
     'ConnectedTwoLocal',
     'TwoMalkin',
@@ -31,7 +31,7 @@ __all__ = [
     'ConnectedThreeLocal',
     'ThreeMalkin',
     'ConnectedThreeMalkin',
-    # 'Assignment2To3',
+    'Assignment2To3',
     'DataLoader',
     'GraphConv',
     'add_pool',

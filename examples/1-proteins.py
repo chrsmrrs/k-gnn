@@ -5,7 +5,8 @@ import torch
 import torch.nn.functional as F
 from torch_scatter import scatter_mean
 from torch_geometric.datasets import TUDataset
-from glocal_gnn import DataLoader, GraphConv
+from torch_geometric.data import DataLoader
+from k_gnn import GraphConv
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--no-train', default=False)
@@ -33,9 +34,7 @@ dataset = TUDataset(
     pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
-# perm = torch.randperm(len(dataset), dtype=torch.long)
-# torch.save(perm, '/Users/rusty1s/Desktop/proteins_perm.pt')
-perm = torch.load('/Users/rusty1s/Desktop/proteins_perm.pt')
+perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
 
 
@@ -45,7 +44,7 @@ class Net(torch.nn.Module):
         self.conv1 = GraphConv(dataset.num_features, 32)
         self.conv2 = GraphConv(32, 64)
         self.conv3 = GraphConv(64, 64)
-        self.fc1 = torch.nn.Linear(64, 32)
+        self.fc1 = torch.nn.Linear(64, 64)
         self.fc2 = torch.nn.Linear(64, 32)
         self.fc3 = torch.nn.Linear(32, dataset.num_classes)
 
@@ -143,10 +142,9 @@ for i in range(10):
         if best_val_loss >= val_loss:
             test_acc = test(test_loader)
             best_val_loss = val_loss
-        if epoch % 5 == 0:
-            print('Epoch: {:03d}, LR: {:7f}, Train Loss: {:.7f}, '
-                  'Val Loss: {:.7f}, Test Acc: {:.7f}'.format(
-                      epoch, lr, train_loss, val_loss, test_acc))
+        print('Epoch: {:03d}, LR: {:7f}, Train Loss: {:.7f}, '
+              'Val Loss: {:.7f}, Test Acc: {:.7f}'.format(
+                  epoch, lr, train_loss, val_loss, test_acc))
     acc.append(test_acc)
 acc = torch.tensor(acc)
 print('---------------- Final Result ----------------')

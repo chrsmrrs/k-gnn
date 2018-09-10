@@ -12,7 +12,7 @@ ext_modules = [CppExtension('graph_cpu', ['cpu/graph.cpp'])]
 cmdclass = {'build_ext': BuildExtension}
 
 setup(
-    name='glocal_gnn',
+    name='k_gnn',
     version=__version__,
     description='',
     author='XXX',

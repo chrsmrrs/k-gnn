@@ -6,7 +6,8 @@ import torch.nn.functional as F
 from torch_scatter import scatter_mean
 from torch_geometric.datasets import TUDataset
 from torch_geometric.utils import one_hot, degree
-from glocal_gnn import DataLoader, GraphConv
+from torch_geometric.data import DataLoader
+from k_gnn import GraphConv
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--no-train', default=False)
@@ -34,9 +35,7 @@ dataset = TUDataset(
     pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
-# perm = torch.randperm(len(dataset), dtype=torch.long)
-# torch.save(perm, '/Users/rusty1s/Desktop/imdb_perm.pt')
-perm = torch.load('/Users/rusty1s/Desktop/imdb_perm.pt')
+perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
 
 
@@ -144,10 +143,9 @@ for i in range(10):
         if best_val_loss >= val_loss:
             test_acc = test(test_loader)
             best_val_loss = val_loss
-        if epoch % 5 == 0:
-            print('Epoch: {:03d}, LR: {:7f}, Train Loss: {:.7f}, '
-                  'Val Loss: {:.7f}, Test Acc: {:.7f}'.format(
-                      epoch, lr, train_loss, val_loss, test_acc))
+        print('Epoch: {:03d}, LR: {:7f}, Train Loss: {:.7f}, '
+              'Val Loss: {:.7f}, Test Acc: {:.7f}'.format(
+                  epoch, lr, train_loss, val_loss, test_acc))
     acc.append(test_acc)
 acc = torch.tensor(acc)
 print('---------------- Final Result ----------------')

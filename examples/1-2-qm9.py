@@ -9,9 +9,8 @@ from torch_geometric.datasets import QM9
 import torch_geometric.transforms as T
 from torch_geometric.nn import NNConv
 from torch_geometric.utils import one_hot
-from glocal_gnn import GraphConv, DataLoader, avg_pool
-from glocal_gnn import TwoMalkin, ConnectedThreeMalkin
-from glocal_gnn import Complete
+from k_gnn import GraphConv, DataLoader, avg_pool
+from k_gnn import TwoMalkin
 
 
 class MyFilter(object):
@@ -24,7 +23,6 @@ class MyPreTransform(object):
         x = data.x
         data.x = data.x[:, :5]
         data = TwoMalkin()(data)
-        #data = Complete()(data)
         data.x = x
         return data
 
@@ -42,7 +40,7 @@ target = int(args.target)
 
 print('---- Target: {} ----'.format(target))
 
-path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', '1-2-3-QM9')
+path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', '1-2-QM9')
 dataset = QM9(
     path,
     transform=T.Compose([MyTransform(), T.Distance()]),
@@ -56,16 +54,14 @@ dataset.data.iso_type_2 = one_hot(dataset.data.iso_type_2, num_classes=num_i_2)
 dataset = dataset.shuffle()
 
 # Normalize targets to mean = 0 and std = 1.
-tenpercent = int(len(dataset)*0.1)
+tenpercent = int(len(dataset) * 0.1)
 mean = dataset.data.y[tenpercent:].mean(dim=0)
-print('---- Mean: {:7f} ----'.format(mean[target].item()))
 std = dataset.data.y[tenpercent:].std(dim=0)
-print('---- Std: {:7f} ----'.format(std[target].item()))
 dataset.data.y = (dataset.data.y - mean) / std
 
 test_dataset = dataset[:tenpercent]
-val_dataset = dataset[tenpercent:2*tenpercent]
-train_dataset = dataset[2*tenpercent:]
+val_dataset = dataset[tenpercent:2 * tenpercent]
+train_dataset = dataset[2 * tenpercent:]
 test_loader = DataLoader(test_dataset, batch_size=64)
 val_loader = DataLoader(val_dataset, batch_size=64)
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
@@ -145,6 +141,7 @@ def test(loader):
                   (data.y * std[target].cuda())).abs().sum().item()  # MAE
     return error / len(loader.dataset)
 
+
 best_val_error = None
 for epoch in range(1, 201):
     lr = scheduler.optimizer.param_groups[0]['lr']
@@ -157,10 +154,11 @@ for epoch in range(1, 201):
     if val_error <= best_val_error:
         test_error = test(test_loader)
         best_val_error = val_error
-        print('Epoch: {:03d}, LR: {:7f}, Loss: {:.7f}, Validation MAE: {:.7f}, '
-              'Test MAE: {:.7f}, '
-              'Test MAE norm: {:.7f}'.format(epoch, lr, loss, val_error,
-                                             test_error,
-                                             test_error / std[target].cuda()))
+        print(
+            'Epoch: {:03d}, LR: {:7f}, Loss: {:.7f}, Validation MAE: {:.7f}, '
+            'Test MAE: {:.7f}, '
+            'Test MAE norm: {:.7f}'.format(epoch, lr, loss, val_error,
+                                           test_error,
+                                           test_error / std[target].cuda()))
     else:
         print('Epoch: {:03d}'.format(epoch))
