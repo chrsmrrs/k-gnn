@@ -1,6 +1,6 @@
 # Weisfeiler and Leman Go Neural: Higher-order Graph Neural Networks
 
-This is the source code for the AAAI 2019 paper **Weisfeiler and Leman Go Neural: Higher-order Graph Neural Networks**.
+This is the source code for the AAAI 2019 paper **Weisfeiler and Leman Go Neural: Higher-order Graph Neural Networks** (**[Preprint](https://arxiv.org/abs/1810.02244)**).
 
 ## Installation
 
