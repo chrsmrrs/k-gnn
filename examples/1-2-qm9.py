@@ -95,7 +95,7 @@ class Net(torch.nn.Module):
         data.x = F.elu(self.conv3(data.x, data.edge_index, data.edge_attr))
         x_1 = scatter_mean(data.x, data.batch, dim=0)
 
-        data.x = avg_pool(data.x, data.assignment_2)
+        data.x = avg_pool(data.x, data.assignment_index_2)
         data.x = torch.cat([data.x, data.iso_type_2], dim=1)
 
         data.x = F.elu(self.conv4(data.x, data.edge_index_2))

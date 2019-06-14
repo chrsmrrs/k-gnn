@@ -105,14 +105,14 @@ class Net(torch.nn.Module):
         x = data.x
         x_1 = scatter_mean(data.x, data.batch, dim=0)
 
-        data.x = avg_pool(x, data.assignment_2)
+        data.x = avg_pool(x, data.assignment_index_2)
         data.x = torch.cat([data.x, data.iso_type_2], dim=1)
 
         data.x = F.elu(self.conv4(data.x, data.edge_index_2))
         data.x = F.elu(self.conv5(data.x, data.edge_index_2))
         x_2 = scatter_mean(data.x, data.batch_2, dim=0)
 
-        data.x = avg_pool(x, data.assignment_3)
+        data.x = avg_pool(x, data.assignment_index_3)
         data.x = torch.cat([data.x, data.iso_type_3], dim=1)
 
         data.x = F.elu(self.conv6(data.x, data.edge_index_3))
