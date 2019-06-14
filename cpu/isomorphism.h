@@ -14,7 +14,7 @@ inline int64_t pair(int64_t u, int64_t v) {
 }
 
 inline Tensor convert(Tensor x) {
-  auto range = empty(x.size(1), x.options());
+  auto range = torch::empty(x.size(1), x.options());
   arange_out(range, x.size(1));
   x = x * range.view({1, -1});
   return x.sum(1).toType(kLong);

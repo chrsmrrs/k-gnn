@@ -45,7 +45,7 @@ template <> struct Connect<2> {
     }
 
     if (rows.size() == 0) {
-      return empty(0, row.type());
+      return torch::empty(0, row.options());
     }
 
     auto index = stack({from_vector(rows), from_vector(cols)}, 0);
@@ -70,7 +70,7 @@ template <> struct Connect<2> {
     }
 
     if (rows.size() == 0) {
-      return empty(0, row.type());
+      return torch::empty(0, row.options());
     }
 
     auto index = stack({from_vector(rows), from_vector(cols)}, 0);
@@ -114,7 +114,7 @@ template <> struct Connect<3> {
     }
 
     if (rows.size() == 0) {
-      return empty(0, row.type());
+      return torch::empty(0, row.options());
     }
 
     auto index = stack({from_vector(rows), from_vector(cols)}, 0);
@@ -144,7 +144,7 @@ template <> struct Connect<3> {
     }
 
     if (rows.size() == 0) {
-      return empty(0, row.type());
+      return torch::empty(0, row.options());
     }
 
     auto index = stack({from_vector(rows), from_vector(cols)}, 0);
