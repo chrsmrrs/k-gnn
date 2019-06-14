@@ -3,7 +3,7 @@ import os.path as osp
 import argparse
 import torch
 import torch.nn.functional as F
-from torch_scatter import scatter_mean
+from torch_scatter import scatter_max
 from torch_geometric.datasets import TUDataset
 from k_gnn import GraphConv
 from torch_geometric.data import DataLoader
@@ -19,26 +19,14 @@ class MyFilter(object):
         return data.num_nodes >= 5
 
 
-class MyPreTransform(object):
-    def __call__(self, data):
-        # data.x = data.x[:, -3:]  # Only use node attributes.
-        return data
-
-
 BATCH = 32
-path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-NCI')
-dataset = TUDataset(
-    path,
-    name='NCI1',
-    pre_transform=MyPreTransform(),
-    pre_filter=MyFilter())
+path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', '1-NCI')
+dataset = TUDataset(path, name='NCI1', pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
 torch.save(perm, 'nci_perm.pt')
 perm = torch.load('nci_perm.pt')
 dataset = dataset[perm]
-
 
 
 class Net(torch.nn.Module):
@@ -59,7 +47,7 @@ class Net(torch.nn.Module):
         data.x = F.elu(self.conv1(data.x, data.edge_index))
         data.x = F.elu(self.conv2(data.x, data.edge_index))
         data.x = F.elu(self.conv3(data.x, data.edge_index))
-        x_1 = scatter_mean(data.x, data.batch, dim=0)
+        x_1 = scatter_max(data.x, data.batch, dim=0)[0]
         x = x_1
 
         if args.no_train:
@@ -137,7 +125,7 @@ for i in range(10):
     print('---------------- Split {} ----------------'.format(i))
 
     best_val_loss, test_acc = 100, 0
-    for epoch in range(1, 301):
+    for epoch in range(1, 101):
         lr = scheduler.optimizer.param_groups[0]['lr']
         train_loss = train(epoch, train_loader, optimizer)
         val_loss = val(val_loader)
@@ -147,7 +135,7 @@ for i in range(10):
             best_val_loss = val_loss
         print('Epoch: {:03d}, LR: {:7f}, Train Loss: {:.7f}, '
               'Val Loss: {:.7f}, Test Acc: {:.7f}'.format(
-            epoch, lr, train_loss, val_loss, test_acc))
+                  epoch, lr, train_loss, val_loss, test_acc))
     acc.append(test_acc)
 acc = torch.tensor(acc)
 print('---------------- Final Result ----------------')
