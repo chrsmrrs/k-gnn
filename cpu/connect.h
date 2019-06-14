@@ -1,6 +1,6 @@
 #pragma once
 
-#include <torch/torch.h>
+#include <torch/extension.h>
 
 #include "iterate.h"
 #include "utils.h"
