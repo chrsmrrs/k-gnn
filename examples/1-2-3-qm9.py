@@ -8,10 +8,8 @@ from torch_scatter import scatter_mean
 from torch_geometric.datasets import QM9
 import torch_geometric.transforms as T
 from torch_geometric.nn import NNConv
-from torch_geometric.utils import one_hot
 from k_gnn import GraphConv, DataLoader, avg_pool
 from k_gnn import TwoMalkin, ConnectedThreeMalkin
-from k_gnn import Complete
 
 
 class MyFilter(object):
@@ -51,11 +49,13 @@ dataset = QM9(
 
 dataset.data.iso_type_2 = torch.unique(dataset.data.iso_type_2, True, True)[1]
 num_i_2 = dataset.data.iso_type_2.max().item() + 1
-dataset.data.iso_type_2 = one_hot(dataset.data.iso_type_2, num_classes=num_i_2)
+dataset.data.iso_type_2 = F.one_hot(
+    dataset.data.iso_type_2, num_classes=num_i_2).to(torch.float)
 
 dataset.data.iso_type_3 = torch.unique(dataset.data.iso_type_3, True, True)[1]
 num_i_3 = dataset.data.iso_type_3.max().item() + 1
-dataset.data.iso_type_3 = one_hot(dataset.data.iso_type_3, num_classes=num_i_3)
+dataset.data.iso_type_3 = F.one_hot(
+    dataset.data.iso_type_3, num_classes=num_i_3).to(torch.float)
 
 dataset = dataset.shuffle()
 

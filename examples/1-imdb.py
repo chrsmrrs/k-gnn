@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 from torch_scatter import scatter_mean
 from torch_geometric.datasets import TUDataset
-from torch_geometric.utils import one_hot, degree
+from torch_geometric.utils import degree
 from torch_geometric.data import DataLoader
 from k_gnn import GraphConv
 
@@ -22,7 +22,7 @@ class MyFilter(object):
 class MyPreTransform(object):
     def __call__(self, data):
         data.x = degree(data.edge_index[0], data.num_nodes, dtype=torch.long)
-        data.x = one_hot(data.x, 136, torch.float)
+        data.x = F.one_hot(data.x, num_classes=136).to(torch.float)
         return data
 
 
