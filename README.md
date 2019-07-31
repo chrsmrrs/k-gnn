@@ -5,7 +5,7 @@ This is the source code for the AAAI 2019 paper **Weisfeiler and Leman Go Neural
 ## Installation
 
 The code is built upon the [PyTorch Geometric package](https://github.com/rusty1s/pytorch_geometric), which needs to be installed before running the examples.
-Please follow its [installation instructions](https://rusty1s.github.io/pytorch_geometric/build/html/notes/installation.html).
+Please follow its [installation instructions](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html).
 
 Finally, run
 
