@@ -92,15 +92,18 @@ template <> struct Assignment<3> {
     int64_t i = 0;
     ITERATE_NODES(0, u, num_nodes, {
       ITERATE_NEIGHBORS(u, v, row_data, col_data, {
-        if (u >= v)
-          continue;
         ITERATE_NEIGHBORS(v, w, row_data, col_data, {
-          if (v >= w)
+          if (w == u)
             continue;
-          set_to_id.insert({{u, v, w}, i});
-          iso_type.push_back(
-              Isomorphism<3, true>::type({u, v, w}, row, col, x, num_labels));
-          i++;
+          vector<int64_t> set = {u, v, w};
+          sort(set.begin(), set.end());
+          auto iter = set_to_id.find(set);
+          if (iter == set_to_id.end()) {
+            set_to_id.insert({set, i});
+            iso_type.push_back(
+                Isomorphism<3, true>::type(set, row, col, x, num_labels));
+            i++;
+          }
         });
       });
     });
