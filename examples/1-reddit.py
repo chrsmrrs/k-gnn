@@ -22,13 +22,13 @@ class MyFilter(object):
 class MyPreTransform(object):
     def __call__(self, data):
         data.x = degree(data.edge_index[0], data.num_nodes, dtype=torch.long)
-        data.x = F.one_hot(data.x).to(torch.float)
+        data.x = F.one_hot(data.x, num_classes=236).to(torch.float)
         return data
 
 
 BATCH = 32
 path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '1141-REDDIT-BINARY')
+    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-REDDIT-BINARY')
 dataset = TUDataset(
     path,
     name='REDDIT-BINARY',
