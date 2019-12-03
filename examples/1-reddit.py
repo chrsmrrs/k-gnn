@@ -28,15 +28,18 @@ class MyPreTransform(object):
 
 BATCH = 32
 path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-IMDB-BINARY')
+    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-REDDIT-BINARY')
 dataset = TUDataset(
     path,
-    name='IMDB-BINARY',
+    name='REDDIT-BINARY',
     pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
+
+print(len(dataset))
+exit()
 
 
 class Net(torch.nn.Module):
