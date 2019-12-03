@@ -31,7 +31,7 @@ path = osp.join(
     osp.dirname(osp.realpath(__file__)), '..', 'data', '1-REDDIT-BINARY')
 dataset = TUDataset(
     path,
-    name='REDDIT-BINARrY',
+    name='REDDIT-BINARY',
     pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
