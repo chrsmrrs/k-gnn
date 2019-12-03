@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 class MyFilter(object):
     def __call__(self, data):
-        return data.num_nodes <= 1000
+        return data.num_nodes <= 100000
 
 
 class MyPreTransform(object):
