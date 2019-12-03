@@ -28,7 +28,7 @@ class MyPreTransform(object):
 
 BATCH = 32
 path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '11-REDDIT-BINARY')
+    osp.dirname(osp.realpath(__file__)), '..', 'data', '111-REDDIT-BINARY')
 dataset = TUDataset(
     path,
     name='REDDIT-BINARY',
