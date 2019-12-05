@@ -19,12 +19,6 @@ class MyFilter(object):
         return data.num_nodes <= 100000
 
 
-class MyPreTransform(object):
-    def __call__(self, data):
-
-        data.x = degree(data.edge_index[0], data.num_nodes, dtype=torch.long)
-        data.x = F.one_hot(data.x, num_classes=3000).to(torch.float)
-        return data
 
 
 BATCH = 32
@@ -33,7 +27,7 @@ path = osp.join(
 dataset = TUDataset(
     path,
     name='REDDIT-BINARY',
-    pre_transform=MyPreTransform(),
+    #pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
