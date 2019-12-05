@@ -34,7 +34,6 @@ perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
 
 print(len(dataset))
-exit()
 
 
 class Net(torch.nn.Module):
