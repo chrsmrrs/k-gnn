@@ -24,7 +24,7 @@ class MyPreTransform(object):
 
         data.x = degree(data.edge_index[0], data.num_nodes, dtype=torch.long)
         print(data.x.max())
-        data.x = F.one_hot(data.x, num_classes=128).to(torch.float)
+        data.x = F.one_hot(data.x, num_classes=-1).to(torch.float)
         return data
 
 
