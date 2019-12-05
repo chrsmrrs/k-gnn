@@ -23,7 +23,7 @@ class MyPreTransform(object):
     def __call__(self, data):
 
         data.x = degree(data.edge_index[0], data.num_nodes, dtype=torch.long)
-        data.x = F.one_hot(data.x, num_classes=2000).to(torch.float)
+        data.x = F.one_hot(data.x, num_classes=3000).to(torch.float)
         return data
 
 
