@@ -33,7 +33,6 @@ dataset = TUDataset(
 perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
 
-exit()
 print(len(dataset))
 exit()
 
