@@ -80,14 +80,6 @@ class MyPreTransform(object):
         return data
 
 BATCH = 32
-path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-REDDIT-BINARY')
-dataset = TUDataset(
-    path,
-    name='REDDIT-BINARY',
-    #pre_transform=MyPreTransform(),
-    pre_filter=MyFilter())
-
 dataset = get_dataset('REDDIT-BINARY')
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
