@@ -73,7 +73,7 @@ path = osp.join(
 dataset = TUDataset(
     path,
     name='REDDIT-BINARY',
-    pre_transform=MyPreTransform(),
+    #pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
 dataset = get_dataset(dataset)
