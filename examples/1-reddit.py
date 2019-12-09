@@ -8,6 +8,7 @@ from torch_geometric.datasets import TUDataset
 from torch_geometric.utils import degree
 from torch_geometric.data import DataLoader
 from k_gnn import GraphConv
+from torch_geometric.transform import OneHotDegree
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--no-train', default=False)
@@ -20,14 +21,13 @@ class MyFilter(object):
 
 
 
-
 BATCH = 32
 path = osp.join(
     osp.dirname(osp.realpath(__file__)), '..', 'data', '1-REDDIT-BINARY')
 dataset = TUDataset(
     path,
     name='REDDIT-BINARY',
-    #pre_transform=MyPreTransform(),
+    pre_transform=OneHotDegree(),
     pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
