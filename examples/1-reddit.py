@@ -76,7 +76,7 @@ dataset = TUDataset(
     #pre_transform=MyPreTransform(),
     pre_filter=MyFilter())
 
-dataset = get_dataset(dataset)
+dataset = get_dataset('REDDIT-BINARY',)
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
