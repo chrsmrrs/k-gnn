@@ -27,7 +27,7 @@ path = osp.join(
 dataset = TUDataset(
     path,
     name='REDDIT-BINARY',
-    pre_transform=OneHotDegree(max_degree=100),
+    pre_transform=OneHotDegree(),
     pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
