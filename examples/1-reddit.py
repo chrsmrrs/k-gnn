@@ -8,7 +8,7 @@ from torch_geometric.datasets import TUDataset
 from torch_geometric.utils import degree
 from torch_geometric.data import DataLoader
 from k_gnn import GraphConv
-from torch_geometric.transform import OneHotDegree
+from torch_geometric.transforms import OneHotDegree
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--no-train', default=False)
