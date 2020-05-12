@@ -63,7 +63,7 @@ class Net(torch.nn.Module):
 
         self.fc1 = torch.nn.Linear(2 * 64, 64)
         self.fc2 = torch.nn.Linear(64, 32)
-        self.fc3 = torch.nn.Linear(32, 1)
+        self.fc3 = torch.nn.Linear(32, 12)
 
     def forward(self, data):
         data.x = F.elu(self.conv1(data.x, data.edge_index, data.edge_attr))
@@ -83,8 +83,8 @@ class Net(torch.nn.Module):
         x = F.elu(self.fc1(x))
         x = F.elu(self.fc2(x))
         x = self.fc3(x)
-        return x.view(-1)
 
+        return x
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = Net().to(device)
