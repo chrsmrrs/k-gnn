@@ -127,7 +127,7 @@ for _ in range(5):
 
     print(len(train_dataset), len(val_dataset), len(test_dataset))
 
-    batch_size = 16
+    batch_size = 64
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
@@ -156,6 +156,7 @@ for _ in range(5):
         return (loss_all / len(train_loader.dataset))
 
 
+    @torch.no_grad()
     def test(loader):
         model.eval()
         error = torch.zeros([1, 12]).to(device)
