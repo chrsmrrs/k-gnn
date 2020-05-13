@@ -147,14 +147,16 @@ for _ in range(5):
 
     def test(loader):
         model.eval()
-        error = 0
-
-        lf = torch.nn.L1Loss()
+        error = torch.zeros([1, 12]).to(device)
 
         for data in loader:
             data = data.to(device)
-            error += lf(model(data) * std, data.y * std).item() * data.num_graphs
-        return error / len(loader.dataset)
+            error += ((data.y * std - model(data) * std).abs() / std).sum(dim=0)
+
+        error = error / len(loader.dataset)
+        error_log = torch.log(error)
+
+        return error.mean().item(), error_log.mean().item()
 
 
     best_val_error = None
