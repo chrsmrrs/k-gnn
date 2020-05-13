@@ -130,7 +130,7 @@ for _ in range(5):
 
     print(len(train_dataset), len(val_dataset), len(test_dataset))
 
-    batch_size = 64
+    batch_size = 32
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
