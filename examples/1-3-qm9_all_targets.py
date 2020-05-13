@@ -43,8 +43,6 @@ dataset.data.iso_type_3 = F.one_hot(
 
 
 
-
-
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
