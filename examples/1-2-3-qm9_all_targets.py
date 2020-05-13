@@ -130,7 +130,7 @@ for _ in range(5):
 
     print(len(train_dataset), len(val_dataset), len(test_dataset))
 
-    batch_size = 32
+    batch_size = 64
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
@@ -165,11 +165,12 @@ for _ in range(5):
 
         for data in loader:
             data = data.to(device)
-            error += (data.y * std - model(data) * std).abs().sum(dim=0) / mean_abs
+            error += ((data.y * std - model(data) * std).abs() / std).sum(dim=0)
+
         error = error / len(loader.dataset)
+        error_log = torch.log(error)
 
-        return error.mean().item()
-
+        return error.mean().item(), error_log.mean().item()
 
     best_val_error = None
     for epoch in range(1, 1001):
