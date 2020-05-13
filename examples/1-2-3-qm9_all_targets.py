@@ -106,19 +106,16 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 
-
-
 results = []
+results_log = []
 for _ in range(5):
 
-
     dataset = dataset.shuffle()
-
 
     tenpercent = int(len(dataset) * 0.1)
     print("###")
     mean = dataset.data.y.mean(dim=0, keepdim=True)
-    mean_abs = dataset.data.y.abs().mean(dim=0, keepdim=True).to(device)  # .view(-1)
+    # mean_abs = dataset.data.y.abs().mean(dim=0, keepdim=True).to(device)  # .view(-1)
     std = dataset.data.y.std(dim=0, keepdim=True)
     dataset.data.y = (dataset.data.y - mean) / std
     mean, std = mean.to(device), std.to(device)
@@ -130,7 +127,7 @@ for _ in range(5):
 
     print(len(train_dataset), len(val_dataset), len(test_dataset))
 
-    batch_size = 64
+    batch_size = 32
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
@@ -176,11 +173,11 @@ for _ in range(5):
     for epoch in range(1, 1001):
         lr = scheduler.optimizer.param_groups[0]['lr']
         loss = train()
-        val_error = test(val_loader)
+        val_error, _ = test(val_loader)
         scheduler.step(val_error)
 
         if best_val_error is None or val_error <= best_val_error:
-            test_error = test(test_loader)
+            test_error, log_test_error = test(test_loader)
             best_val_error = val_error
 
         print('Epoch: {:03d}, LR: {:.7f}, Loss: {:.7f}, Validation MAE: {:.7f}, '
@@ -191,8 +188,13 @@ for _ in range(5):
             break
 
     results.append(test_error)
+    results_log.append(log_test_error)
 
 print("########################")
 print(results)
 results = np.array(results)
 print(results.mean(), results.std())
+
+print(results_log)
+results_log = np.array(results_log)
+print(results_log.mean(), results_log.std())
