@@ -68,6 +68,7 @@ class Net(torch.nn.Module):
         self.conv6 = GraphConv(64 + num_i_3, 64)
         self.conv7 = GraphConv(64, 64)
 
+
         self.fc1 = torch.nn.Linear(3 * 64, 64)
         self.fc2 = torch.nn.Linear(64, 32)
         self.fc3 = torch.nn.Linear(32, 1)
