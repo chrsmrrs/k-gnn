@@ -87,7 +87,7 @@ class Net(torch.nn.Module):
         x = F.elu(self.fc1(x))
         x = F.elu(self.fc2(x))
         x = self.fc3(x)
-        return x.view(-1)
+        return x
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
