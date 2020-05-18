@@ -10,7 +10,7 @@ import torch_geometric.transforms as T
 from torch_geometric.nn import NNConv
 from k_gnn import GraphConv, DataLoader, avg_pool
 from k_gnn import TwoMalkin
-
+import numpy as np
 
 class MyFilter(object):
     def __call__(self, data):
@@ -24,11 +24,6 @@ class MyPreTransform(object):
         data = TwoMalkin()(data)
         data.x = x
         return data
-
-
-
-
-
 
 path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', '1-2-QM9')
 dataset = QM9(
