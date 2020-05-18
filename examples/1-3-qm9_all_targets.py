@@ -26,7 +26,7 @@ class MyPreTransform(object):
         return data
 
 
-path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', '1-23-QM9')
+path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', '1-23-QssM9')
 dataset = QM9(
     path,
     transform=T.Compose([T.Distance(norm=False)]),
