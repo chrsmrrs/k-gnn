@@ -67,7 +67,7 @@ class Net(torch.nn.Module):
 
         self.fc1 = torch.nn.Linear(2 * 64, 64)
         self.fc2 = torch.nn.Linear(64, 32)
-        self.fc3 = torch.nn.Linear(32, 1)
+        self.fc3 = torch.nn.Linear(32, 12)
 
     def forward(self, data):
         data.x = F.elu(self.conv1(data.x, data.edge_index, data.edge_attr))
