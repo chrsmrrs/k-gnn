@@ -17,7 +17,7 @@ inline Tensor coalesce(Tensor index, int64_t num_nodes) {
   Tensor row = index[0], col = index[1], unique, inv, perm;
   tie(unique, inv) = _unique(num_nodes * row + col, true, true);
 
-  perm = torch::empty(num_nodes, index.options());
+  perm = torch::empty(inv.size(0), index.options());
   arange_out(perm, inv.size(0));
   perm = torch::empty(unique.size(0), index.options()).scatter_(0, inv, perm);
 
