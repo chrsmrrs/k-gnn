@@ -20,35 +20,26 @@ class MyFilter(object):
             data.num_nodes < 450
 
 
-class MyPreTransform(object):
-    def __call__(self, data):
-        data.x = data.x[:, -3:]  # Only use node attributes.
-        return data
-
-
 BATCH = 20
-path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-2-3-PROTEINS')
+path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data',
+                '1-2-3-PROTEINS')
 dataset = TUDataset(
-    path,
-    name='PROTEINS',
-    pre_transform=T.Compose(
-        [MyPreTransform(),
-         TwoMalkin(), ConnectedThreeMalkin()]),
-    pre_filter=MyFilter())
+    path, name='PROTEINS',
+    pre_transform=T.Compose([TwoMalkin(),
+                             ConnectedThreeMalkin()]), pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
 
 dataset.data.iso_type_2 = torch.unique(dataset.data.iso_type_2, True, True)[1]
 num_i_2 = dataset.data.iso_type_2.max().item() + 1
-dataset.data.iso_type_2 = F.one_hot(
-    dataset.data.iso_type_2, num_classes=num_i_2).to(torch.float)
+dataset.data.iso_type_2 = F.one_hot(dataset.data.iso_type_2,
+                                    num_classes=num_i_2).to(torch.float)
 
 dataset.data.iso_type_3 = torch.unique(dataset.data.iso_type_3, True, True)[1]
 num_i_3 = dataset.data.iso_type_3.max().item() + 1
-dataset.data.iso_type_3 = F.one_hot(
-    dataset.data.iso_type_3, num_classes=num_i_3).to(torch.float)
+dataset.data.iso_type_3 = F.one_hot(dataset.data.iso_type_3,
+                                    num_classes=num_i_3).to(torch.float)
 
 
 class Net(torch.nn.Module):
