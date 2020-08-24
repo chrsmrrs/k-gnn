@@ -13,7 +13,7 @@ Finally, run
 python setup.py install
 ```
 
-in the root directory of this repository.
+in the root directory of this repository. Tested with PyTorch Geometric 1.4.
 
 ## Running examples
 

@@ -19,20 +19,10 @@ class MyFilter(object):
             data.num_nodes < 450
 
 
-class MyPreTransform(object):
-    def __call__(self, data):
-        data.x = data.x[:, -3:]  # Only use node attributes.
-        return data
-
-
 BATCH = 32
-path = osp.join(
-    osp.dirname(osp.realpath(__file__)), '..', 'data', '1-PROTEINS')
-dataset = TUDataset(
-    path,
-    name='PROTEINS',
-    pre_transform=MyPreTransform(),
-    pre_filter=MyFilter())
+path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data',
+                '1-PROTEINS')
+dataset = TUDataset(path, name='PROTEINS', pre_filter=MyFilter())
 
 perm = torch.randperm(len(dataset), dtype=torch.long)
 dataset = dataset[perm]
