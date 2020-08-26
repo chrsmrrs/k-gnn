@@ -111,96 +111,54 @@ class Net(torch.nn.Module):
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-results = []
-results_log = []
-for _ in range(5):
-
-    dataset = dataset.shuffle()
-
-    tenpercent = int(len(dataset) * 0.1)
-    print("###")
-    mean = dataset.data.y.mean(dim=0, keepdim=True)
-    # mean_abs = dataset.data.y.abs().mean(dim=0, keepdim=True).to(device)  # .view(-1)
-    std = dataset.data.y.std(dim=0, keepdim=True)
-    dataset.data.y = (dataset.data.y - mean) / std
-    mean, std = mean.to(device), std.to(device)
-
-    print("###")
-    test_dataset = dataset[:tenpercent].shuffle()
-    val_dataset = dataset[tenpercent:2 * tenpercent].shuffle()
-    train_dataset = dataset[2 * tenpercent:].shuffle()
-
-    print(len(train_dataset), len(val_dataset), len(test_dataset))
-
-    batch_size = 64
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
-
-    # TODO
-    model = Net().to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                           factor=0.5, patience=5,
-                                                           min_lr=0.0000001)
-
-    def train():
-        model.train()
-        loss_all = 0
-
-        lf = torch.nn.L1Loss()
-
-        for data in train_loader:
-            data = data.to(device)
-            optimizer.zero_grad()
-            loss = lf(model(data), data.y)
-
-            loss.backward()
-            loss_all += loss.item() * data.num_graphs
-            optimizer.step()
-        return (loss_all / len(train_loader.dataset))
+model = Net().to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, factor=0.7, patience=5, min_lr=0.00001)
 
 
-    def test(loader):
-        model.eval()
-        error = torch.zeros([1, 12]).to(device)
+def train(epoch):
+    model.train()
+    loss_all = 0
 
-        for data in loader:
-            data = data.to(device)
-            error += ((data.y * std - model(data) * std).abs() / std).sum(dim=0)
+    for data in train_loader:
+        data = data.to(device)
+        optimizer.zero_grad()
+        loss = F.mse_loss(model(data), data.y)
+        loss.backward()
+        loss_all += loss * data.num_graphs
+        optimizer.step()
+    return loss_all / len(train_loader.dataset)
 
-        error = error / len(loader.dataset)
-        error_log = torch.log(error)
 
-        return error.mean().item(), error_log.mean().item()
+def test(loader):
+    model.eval()
+    error = 0
 
-    best_val_error = None
-    for epoch in range(1, 1001):
-        lr = scheduler.optimizer.param_groups[0]['lr']
-        loss = train()
-        val_error, _ = test(val_loader)
-        scheduler.step(val_error)
+    for data in loader:
+        data = data.to(device)
+        error += ((model(data) * std[target].cuda()) -
+                  (data.y * std[target].cuda())).abs().sum().item()  # MAE
+    return error / len(loader.dataset)
 
-        if best_val_error is None or val_error <= best_val_error:
-            test_error, log_test_error = test(test_loader)
-            best_val_error = val_error
 
-        print('Epoch: {:03d}, LR: {:.7f}, Loss: {:.7f}, Validation MAE: {:.7f}, '
-              'Test MAE: {:.7f}'.format(epoch, lr, loss, val_error, test_error))
+best_val_error = None
+for epoch in range(1, 201):
+    lr = scheduler.optimizer.param_groups[0]['lr']
+    loss = train(epoch)
+    val_error = test(val_loader)
+    scheduler.step(val_error)
 
-        if lr < 0.000001:
-            print("Converged.")
-            break
-
-    results.append(test_error)
-    results_log.append(log_test_error)
-
-print("########################")
-print(results)
-results = np.array(results)
-print(results.mean(), results.std())
-
-print(results_log)
-results_log = np.array(results_log)
-print(results_log.mean(), results_log.std())
+    if best_val_error is None:
+        best_val_error = val_error
+    if val_error <= best_val_error:
+        test_error = test(test_loader)
+        best_val_error = val_error
+        print(
+            'Epoch: {:03d}, LR: {:7f}, Loss: {:.7f}, Validation MAE: {:.7f}, '
+            'Test MAE: {:.7f}, '
+            'Test MAE norm: {:.7f}'.format(epoch, lr, loss, val_error,
+                                           test_error,
+                                           test_error / std[target].cuda()))
+    else:
+        print('Epoch: {:03d}'.format(epoch))
