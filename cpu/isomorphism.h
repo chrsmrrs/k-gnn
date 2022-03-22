@@ -25,7 +25,7 @@ template <int64_t K, bool connected> struct Isomorphism;
 template <> struct Isomorphism<2, true> {
   static int64_t type(vector<int64_t> set, Tensor row, Tensor col, Tensor x,
                       int64_t num_labels) {
-    auto x_data = x.data<int64_t>();
+    auto x_data = x.data_ptr<int64_t>();
     vector<int64_t> labels = {x_data[set[0]], x_data[set[1]]};
     sort(labels.begin(), labels.end());
 
@@ -36,7 +36,7 @@ template <> struct Isomorphism<2, true> {
 template <> struct Isomorphism<2, false> {
   static int64_t type(vector<int64_t> set, Tensor row, Tensor col, Tensor x,
                       int64_t num_labels) {
-    auto x_data = x.data<int64_t>();
+    auto x_data = x.data_ptr<int64_t>();
     vector<int64_t> labels = {x_data[set[0]], x_data[set[1]]};
     sort(labels.begin(), labels.end());
 
@@ -48,7 +48,7 @@ template <> struct Isomorphism<2, false> {
 template <> struct Isomorphism<3, true> {
   static int64_t type(vector<int64_t> set, Tensor row, Tensor col, Tensor x,
                       int64_t num_labels) {
-    auto x_data = x.data<int64_t>();
+    auto x_data = x.data_ptr<int64_t>();
     vector<int64_t> labels = {x_data[set[0]], x_data[set[1]], x_data[set[2]]};
     sort(labels.begin(), labels.end());
 
