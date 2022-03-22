@@ -82,7 +82,7 @@ Tensor assignment_2to3(Tensor index, int64_t num_nodes) {
     cols.push_back(item3.second);
   }
 
-  return stack({from_vector(rows), from_vector(cols)}, 0);
+  return torch::stack({from_vector(rows), from_vector(cols)}, 0);
 }
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {

@@ -25,7 +25,7 @@ template <int64_t K> struct Connect;
 template <> struct Connect<2> {
   static Tensor local(Tensor row, Tensor col,
                       map<vector<int64_t>, int64_t> set_to_id) {
-    auto row_data = row.data<int64_t>(), col_data = col.data<int64_t>();
+    auto row_data = row.data_ptr<int64_t>(), col_data = col.data_ptr<int64_t>();
     vector<int64_t> rows, cols;
 
     for (auto item : set_to_id) {
@@ -48,13 +48,13 @@ template <> struct Connect<2> {
       return torch::empty(0, row.options());
     }
 
-    auto index = stack({from_vector(rows), from_vector(cols)}, 0);
+    auto index = torch::stack({from_vector(rows), from_vector(cols)}, 0);
     return coalesce(remove_self_loops(index), (int64_t)set_to_id.size());
   }
 
   static Tensor malkin(Tensor row, Tensor col,
                        map<vector<int64_t>, int64_t> set_to_id) {
-    auto row_data = row.data<int64_t>(), col_data = col.data<int64_t>();
+    auto row_data = row.data_ptr<int64_t>(), col_data = col.data_ptr<int64_t>();
     vector<int64_t> rows, cols;
 
     for (auto item : set_to_id) {
@@ -73,7 +73,7 @@ template <> struct Connect<2> {
       return torch::empty(0, row.options());
     }
 
-    auto index = stack({from_vector(rows), from_vector(cols)}, 0);
+    auto index = torch::stack({from_vector(rows), from_vector(cols)}, 0);
     return coalesce(remove_self_loops(index), (int64_t)set_to_id.size());
   }
 };
@@ -81,7 +81,7 @@ template <> struct Connect<2> {
 template <> struct Connect<3> {
   static Tensor local(Tensor row, Tensor col,
                       map<vector<int64_t>, int64_t> set_to_id) {
-    auto row_data = row.data<int64_t>(), col_data = col.data<int64_t>();
+    auto row_data = row.data_ptr<int64_t>(), col_data = col.data_ptr<int64_t>();
     vector<int64_t> rows, cols;
 
     for (auto item : set_to_id) {
@@ -117,13 +117,13 @@ template <> struct Connect<3> {
       return torch::empty(0, row.options());
     }
 
-    auto index = stack({from_vector(rows), from_vector(cols)}, 0);
+    auto index = torch::stack({from_vector(rows), from_vector(cols)}, 0);
     return coalesce(remove_self_loops(index), (int64_t)set_to_id.size());
   }
 
   static Tensor malkin(Tensor row, Tensor col,
                        map<vector<int64_t>, int64_t> set_to_id) {
-    auto row_data = row.data<int64_t>(), col_data = col.data<int64_t>();
+    auto row_data = row.data_ptr<int64_t>(), col_data = col.data_ptr<int64_t>();
     vector<int64_t> rows, cols;
 
     for (auto item : set_to_id) {
@@ -147,7 +147,7 @@ template <> struct Connect<3> {
       return torch::empty(0, row.options());
     }
 
-    auto index = stack({from_vector(rows), from_vector(cols)}, 0);
+    auto index = torch::stack({from_vector(rows), from_vector(cols)}, 0);
     return coalesce(remove_self_loops(index), (int64_t)set_to_id.size());
   }
 };

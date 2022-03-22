@@ -36,7 +36,7 @@ template <> struct Assignment<2> {
 
   static AssignmentType connected(Tensor row, Tensor col, Tensor x,
                                   int64_t num_nodes) {
-    auto row_data = row.data<int64_t>(), col_data = col.data<int64_t>();
+    auto row_data = row.data_ptr<int64_t>(), col_data = col.data_ptr<int64_t>();
     map<vector<int64_t>, int64_t> set_to_id;
     vector<int64_t> iso_type;
     auto num_labels = x.size(1);
@@ -83,7 +83,7 @@ template <> struct Assignment<3> {
 
   static AssignmentType connected(Tensor row, Tensor col, Tensor x,
                                   int64_t num_nodes) {
-    auto row_data = row.data<int64_t>(), col_data = col.data<int64_t>();
+    auto row_data = row.data_ptr<int64_t>(), col_data = col.data_ptr<int64_t>();
     map<vector<int64_t>, int64_t> set_to_id;
     vector<int64_t> iso_type;
     auto num_labels = x.size(1);
