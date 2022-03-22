@@ -167,17 +167,17 @@ for i in range(10):
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode='min', factor=0.7, patience=5, min_lr=0.00001)
 
-    test_mask = torch.zeros(len(dataset), dtype=torch.uint8)
+    test_mask = torch.zeros(len(dataset), dtype=torch.bool)
     n = len(dataset) // 10
     test_mask[i * n:(i + 1) * n] = 1
     test_dataset = dataset[test_mask]
-    train_dataset = dataset[1 - test_mask]
+    train_dataset = dataset[~test_mask]
 
     n = len(train_dataset) // 10
-    val_mask = torch.zeros(len(train_dataset), dtype=torch.uint8)
+    val_mask = torch.zeros(len(train_dataset), dtype=torch.bool)
     val_mask[i * n:(i + 1) * n] = 1
     val_dataset = train_dataset[val_mask]
-    train_dataset = train_dataset[1 - val_mask]
+    train_dataset = train_dataset[~val_mask]
 
     val_loader = DataLoader(val_dataset, batch_size=BATCH)
     test_loader = DataLoader(test_dataset, batch_size=BATCH)
